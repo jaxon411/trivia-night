@@ -2,16 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trivia Night - Player Controller</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Trivia Night</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,17 +17,17 @@
             flex-direction: column;
         }
 
-        /* Header */
         .header {
-            padding: 1rem 2rem;
+            padding: 0.75rem 1.5rem;
             background: rgba(0,0,0,0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
             background: linear-gradient(45deg, #3498db, #9b59b6);
             -webkit-background-clip: text;
@@ -40,45 +35,41 @@
             background-clip: text;
         }
 
-        /* Main Content */
+        #player-name-display {
+            font-size: 1rem;
+            color: #a0a0b0;
+        }
+
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 1.5rem;
+            overflow-y: auto;
         }
 
-        /* Screens */
         .screen {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             text-align: center;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
-        /* Name Entry */
-        .name-input-container {
-            animation: fadeIn 0.5s ease;
-        }
-
+        /* === NAME ENTRY === */
         .name-input {
             width: 100%;
-            padding: 1.5rem;
+            padding: 1.2rem;
             margin: 1.5rem 0;
             border: 3px solid #3498db;
             border-radius: 16px;
             background: rgba(0,0,0,0.3);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             text-align: center;
-            transition: all 0.3s ease;
         }
-
         .name-input:focus {
             outline: none;
             border-color: #9b59b6;
@@ -87,276 +78,166 @@
 
         .join-btn {
             width: 100%;
-            padding: 1.5rem;
-            font-size: 1.5rem;
+            padding: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
             background: linear-gradient(135deg, #3498db, #9b59b6);
             color: white;
             border: none;
             border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
+        .join-btn:active { transform: scale(0.98); }
 
-        .join-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(52, 152, 219, 0.6);
+        #join-message {
+            margin-top: 1rem;
+            min-height: 1.5rem;
+            font-size: 1.1rem;
         }
 
-        /* Waiting Screen */
-        .waiting-screen {
-            animation: fadeIn 0.5s ease;
-        }
-
+        /* === WAITING === */
         .waiting-icon {
-            font-size: 5rem;
+            font-size: 4rem;
             margin-bottom: 1rem;
-            animation: bounce 1s ease infinite;
+            animation: bounce 1.5s ease infinite;
         }
-
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-15px); }
         }
-
         .waiting-text {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            color: #a0a0b0;
         }
 
-        .countdown {
-            font-size: 3rem;
-            color: #f1c40f;
-            font-weight: bold;
-            margin: 1rem 0;
+        /* === GAME === */
+        .game-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
         }
-
-        /* Game Screen */
-        .game-screen {
-            animation: fadeIn 0.5s ease;
-        }
-
         .game-category {
-            font-size: 1.5rem;
-            padding: 0.5rem 1.5rem;
-            border-radius: 12px;
-            display: inline-block;
-            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
         }
-
+        .game-counter {
+            font-size: 1rem;
+            color: #a0a0b0;
+        }
+        .game-timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
         .game-question {
-            font-size: 1.8rem;
-            line-height: 1.5;
-            margin: 2rem 0;
-            padding: 0 1rem;
-        }
-
-        .timer-display {
-            font-size: 2rem;
-            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            line-height: 1.4;
+            margin: 0.75rem 0;
+            padding: 0 0.5rem;
         }
 
         .answers-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: 0.75rem;
+            margin-top: 1rem;
         }
 
         .answer-btn {
             background: rgba(255,255,255,0.1);
             color: white;
-            padding: 1.5rem;
-            border: 3px solid rgba(255,255,255,0.2);
+            padding: 1.1rem 1rem;
+            border: 3px solid rgba(255,255,255,0.15);
             border-radius: 12px;
-            font-size: 1.4rem;
+            font-size: 1.15rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 80px;
-        }
-
-        .answer-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.02);
-        }
-
-        .answer-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Answer Feedback */
-        .answer-feedback {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .feedback-content {
+            transition: all 0.15s ease;
             text-align: center;
-            padding: 2rem;
-            border-radius: 20px;
+            word-wrap: break-word;
+        }
+        .answer-btn:active:not(:disabled) {
+            transform: scale(0.97);
+            background: rgba(255,255,255,0.2);
         }
 
-        .feedback-icon {
-            font-size: 6rem;
-            margin-bottom: 1rem;
-        }
-
-        .feedback-title {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: bold;
-        }
-
-        .feedback-points {
+        /* === RESULTS (between rounds) === */
+        .results-rank {
             font-size: 2rem;
-            margin: 1rem 0;
-        }
-
-        .feedback-btn {
-            background: #3498db;
-            color: white;
-            padding: 1rem 3rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 2rem;
-        }
-
-        .feedback-btn:hover {
-            background: #2980b9;
-        }
-
-        /* Score Screen */
-        .score-screen {
-            animation: fadeIn 0.5s ease;
-        }
-
-        .score-title {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .score-value {
-            font-size: 4rem;
-            color: #2ecc71;
-            font-weight: bold;
-            margin: 1rem 0;
-        }
-
-        .total-score {
-            font-size: 1.5rem;
             color: #a0a0b0;
+            margin-bottom: 0.5rem;
+        }
+        .results-label {
+            font-size: 1.2rem;
+            color: #a0a0b0;
+            margin-bottom: 0.5rem;
+        }
+        .results-score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #2ecc71;
+            margin: 0.5rem 0;
+        }
+        .results-message {
+            font-size: 1.1rem;
+            color: #a0a0b0;
+            margin-top: 1rem;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .game-question { font-size: 1.4rem; }
-            .answers-grid { gap: 0.5rem; }
-            .answer-btn { padding: 1rem; font-size: 1.2rem; }
-        }
-
-        @media (min-width: 768px) {
+        /* Larger screens: 2-column answers */
+        @media (min-width: 500px) {
             .answers-grid {
                 grid-template-columns: 1fr 1fr;
-            }
-            .answer-btn {
-                min-height: 120px;
-                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
-        <div class="logo">
-            <i class="fas fa-gamepad"></i> Trivia Night
-        </div>
+        <div class="logo"><i class="fas fa-gamepad"></i> Trivia Night</div>
         <div id="player-name-display"></div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        
-        <!-- Name Entry Screen -->
-        <div id="screen-name" class="screen name-input-container">
-            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">Welcome to Trivia Night!</h1>
-            <p style="color: #a0a0b0; margin-bottom: 2rem;">Enter your name to join the game</p>
-            <input 
-                type="text" 
-                id="player-name" 
-                class="name-input" 
-                placeholder="Enter your name..."
-                maxlength="20"
-                autocomplete="off"
-            >
-            <button class="join-btn" id="join-btn">
-                <i class="fas fa-paper-plane"></i> JOIN GAME
-            </button>
-            <p id="join-message" style="margin-top: 1rem; min-height: 1.5rem;"></p>
+
+        <!-- Name Entry -->
+        <div id="screen-name" class="screen">
+            <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">🎮 Trivia Night</h1>
+            <p style="color: #a0a0b0; margin-bottom: 1rem;">Enter your name to join!</p>
+            <input type="text" id="player-name" class="name-input" placeholder="Your name..." maxlength="20" autocomplete="off">
+            <button class="join-btn" id="join-btn"><i class="fas fa-paper-plane"></i> JOIN</button>
+            <p id="join-message"></p>
         </div>
 
-        <!-- Waiting Screen -->
-        <div id="screen-waiting" class="screen waiting-screen hidden">
-            <i class="fas fa-waiting-screen waiting-icon">⏳</i>
+        <!-- Waiting -->
+        <div id="screen-waiting" class="screen hidden">
+            <div class="waiting-icon">⏳</div>
             <div class="waiting-text">Waiting for host to start...</div>
-            <div class="waiting-text">You're all set!</div>
-            <div class="countdown" id="waiting-countdown"></div>
+            <div class="waiting-text" style="color: #2ecc71; margin-top: 1rem;">You're in! 🎉</div>
         </div>
 
-        <!-- Game Screen -->
-        <div id="screen-game" class="screen game-screen hidden">
-            <div class="game-category" id="game-category">
-                <i class="fas fa-tag"></i> Category
+        <!-- Game (question + answers) -->
+        <div id="screen-game" class="screen hidden">
+            <div class="game-top">
+                <div class="game-category" id="game-category">Category</div>
+                <div class="game-counter" id="game-question-counter">1 / 10</div>
             </div>
-            <div class="game-question" id="game-question">
-                Question goes here...
+            <div class="game-timer-display">
+                <i class="fas fa-stopwatch" style="font-size: 0.7em;"></i> <span id="game-timer">15</span>s
             </div>
-            <div class="timer-display">
-                <i class="fas fa-stopwatch"></i> <span id="game-timer">15</span>s
-            </div>
-            <div class="answers-grid" id="answers-grid">
-                <!-- Answers will be added here -->
-            </div>
+            <div class="game-question" id="game-question">Question text here</div>
+            <div class="answers-grid" id="answers-grid"></div>
         </div>
 
-        <!-- Answer Feedback -->
-        <div id="screen-feedback" class="answer-feedback hidden">
-            <div class="feedback-content">
-                <div class="feedback-icon" id="feedback-icon"></div>
-                <div class="feedback-title" id="feedback-title"></div>
-                <div class="feedback-points" id="feedback-points"></div>
-                <button class="feedback-btn" id="feedback-btn">CONTINUE</button>
-            </div>
-        </div>
-
-        <!-- Score Screen -->
-        <div id="screen-score" class="screen score-screen hidden">
-            <div class="score-title">Round Complete!</div>
-            <div class="score-value" id="round-score">+1000</div>
-            <div class="total-score">Total Score: <span id="total-score">0</span></div>
-            <p style="margin-top: 2rem; color: #a0a0b0;">Get ready for the next question...</p>
+        <!-- Results (between rounds + final) -->
+        <div id="screen-results" class="screen hidden">
+            <div class="results-rank" id="results-rank"></div>
+            <div class="results-label">Your Score</div>
+            <div class="results-score" id="results-score">0</div>
+            <div class="results-message" id="results-message">Next question coming up...</div>
         </div>
 
     </div>

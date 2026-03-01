@@ -4,80 +4,73 @@ let ws;
 let playerId = null;
 let playerName = '';
 let currentScore = 0;
-let timerInterval;
 let currentQuestion = null;
-
-// DOM Elements
-const screens = {
-    name: document.getElementById('screen-name'),
-    waiting: document.getElementById('screen-waiting'),
-    game: document.getElementById('screen-game'),
-    feedback: document.getElementById('screen-feedback'),
-    score: document.getElementById('screen-score')
-};
+let screens = {};  // Populated after DOM loads
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if player already joined
-    const savedPlayerId = localStorage.getItem('playerId');
+    // Get screen elements AFTER DOM is ready
+    screens = {
+        name: document.getElementById('screen-name'),
+        waiting: document.getElementById('screen-waiting'),
+        game: document.getElementById('screen-game'),
+        results: document.getElementById('screen-results')
+    };
+
+    // Check if we have a saved name (from join page redirect)
     const savedName = localStorage.getItem('playerName');
-    
-    if (savedPlayerId && savedName) {
-        playerId = savedPlayerId;
+    if (savedName) {
         playerName = savedName;
         document.getElementById('player-name-display').textContent = playerName;
         showScreen('waiting');
         connectWebSocket();
     }
-    
+
     // Join button
     document.getElementById('join-btn').addEventListener('click', joinGame);
-    
+
     // Enter key on name input
     document.getElementById('player-name').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            joinGame();
-        }
-    });
-    
-    // Feedback button
-    document.getElementById('feedback-btn').addEventListener('click', hideFeedback);
-    
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        adjustQuestionFontSize();
+        if (e.key === 'Enter') joinGame();
     });
 });
 
+// Screen management
+function showScreen(screenName) {
+    Object.values(screens).forEach(screen => {
+        if (screen) screen.classList.add('hidden');
+    });
+    if (screens[screenName]) {
+        screens[screenName].classList.remove('hidden');
+    }
+}
+
 // WebSocket Connection
 function connectWebSocket() {
+    if (ws && ws.readyState === WebSocket.OPEN) return;
+
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws/player`;
-    
+
     ws = new WebSocket(wsUrl);
-    
+
     ws.onopen = () => {
         if (playerName) {
-            ws.send(JSON.stringify({
-                type: 'join',
-                name: playerName
-            }));
+            ws.send(JSON.stringify({ type: 'join', name: playerName }));
         }
     };
-    
+
     ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
         handleServerMessage(message);
     };
-    
+
     ws.onclose = () => {
-        console.log('WebSocket disconnected, reconnecting...');
         setTimeout(connectWebSocket, 2000);
     };
-    
+
     ws.onerror = (error) => {
         console.error('WebSocket error:', error);
-        // showScreen('name');
     };
 }
 
@@ -87,14 +80,14 @@ function handleServerMessage(message) {
         case 'joined':
             handleJoined(message);
             break;
-        case 'lobby_update':
-            handleLobbyUpdate(message);
-            break;
         case 'question':
             handleQuestion(message);
             break;
         case 'timer':
             handleTimer(message);
+            break;
+        case 'answer_received':
+            // Answer was accepted, buttons already disabled
             break;
         case 'reveal':
             handleReveal(message);
@@ -105,6 +98,9 @@ function handleServerMessage(message) {
         case 'final_results':
             handleFinalResults(message);
             break;
+        case 'lobby_update':
+            // Stay on waiting screen
+            break;
     }
 }
 
@@ -112,120 +108,73 @@ function handleServerMessage(message) {
 function joinGame() {
     const nameInput = document.getElementById('player-name');
     const name = nameInput.value.trim();
-    
+
     if (!name) {
-        showMessage('Please enter your name!', 'error');
+        document.getElementById('join-message').textContent = 'Please enter your name!';
+        document.getElementById('join-message').style.color = '#e74c3c';
         return;
     }
-    
+
     playerName = name;
-    
-    // Show loading state
+    localStorage.setItem('playerName', name);
+
     const joinBtn = document.getElementById('join-btn');
     joinBtn.disabled = true;
     joinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> JOINING...';
-    
-    // Connect to WebSocket
+
     connectWebSocket();
 }
 
 function handleJoined(message) {
     playerId = message.player_id;
     localStorage.setItem('playerId', playerId);
-    localStorage.setItem('playerName', playerName);
-    
-    // Update header
+
     document.getElementById('player-name-display').textContent = playerName;
-    
-    // Show waiting screen
-    showMessage(`Welcome, ${playerName}!`, 'success');
-    
-    setTimeout(() => {
-        showScreen('waiting');
-    }, 1000);
-    
-    // Start countdown
-    startWaitingCountdown();
-}
-
-function startWaitingCountdown() {
-    let count = 3;
-    const countdownEl = document.getElementById('waiting-countdown');
-    
-    countdownEl.textContent = count;
-    
-    const interval = setInterval(() => {
-        count--;
-        countdownEl.textContent = count;
-        
-        if (count <= 0) {
-            clearInterval(interval);
-        }
-    }, 1000);
-}
-
-function handleLobbyUpdate(message) {
-    console.log('Lobby update:', message);
-    // Update lobby display if needed
+    showScreen('waiting');
 }
 
 // Question Handling
 function handleQuestion(message) {
     currentQuestion = message.question;
-    const timer = message.timer;
-    
+
     showScreen('game');
-    
-    // Update question info
+
+    // Category
     const categoryEl = document.getElementById('game-category');
     categoryEl.innerHTML = `<i class="fas fa-tag"></i> ${escapeHtml(currentQuestion.category)}`;
-    categoryEl.className = `game-category cat-${currentQuestion.category.toLowerCase().replace(/ /g, '-')}`;
-    
+
+    // Question
     document.getElementById('game-question').textContent = currentQuestion.question;
-    adjustQuestionFontSize();
-    
-    // Update answers
+
+    // Question number
+    const counterEl = document.getElementById('game-question-counter');
+    if (counterEl) counterEl.textContent = `${message.question_num} / ${message.total_questions}`;
+
+    // Timer
+    updateTimerDisplay(message.timer);
+
+    // Answer buttons
     const answersGrid = document.getElementById('answers-grid');
     answersGrid.innerHTML = '';
-    
+
     currentQuestion.answers.forEach((answer, index) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
         btn.textContent = answer;
-        btn.onclick = () => submitAnswer(index);
+        btn.onclick = () => submitAnswer(index, btn);
         answersGrid.appendChild(btn);
     });
-    
-    // Update timer
-    updateTimerDisplay(timer);
-    
-    // Start timer
-    startTimer(timer);
 }
 
-function startTimer(seconds) {
-    if (timerInterval) {
-        clearInterval(timerInterval);
-    }
-    
-    let remaining = seconds;
-    updateTimerDisplay(remaining);
-    
-    timerInterval = setInterval(() => {
-        remaining--;
-        updateTimerDisplay(remaining);
-        
-        if (remaining <= 0) {
-            clearInterval(timerInterval);
-        }
-    }, 1000);
+function handleTimer(message) {
+    updateTimerDisplay(message.timer);
 }
 
 function updateTimerDisplay(seconds) {
-    document.getElementById('game-timer').textContent = seconds;
-    
-    // Visual feedback for low time
     const timerEl = document.getElementById('game-timer');
+    if (!timerEl) return;
+    timerEl.textContent = seconds;
+
     if (seconds <= 5) {
         timerEl.style.color = '#e74c3c';
     } else if (seconds <= 10) {
@@ -236,137 +185,104 @@ function updateTimerDisplay(seconds) {
 }
 
 // Answer Submission
-function submitAnswer(answerIndex) {
-    if (!ws || ws.readyState !== WebSocket.OPEN) {
-        return;
-    }
-    
-    // Send answer
+function submitAnswer(answerIndex, clickedBtn) {
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
     ws.send(JSON.stringify({
         type: 'answer',
-        index: answerIndex,
-        time_remaining: document.getElementById('game-timer').textContent
+        index: answerIndex
     }));
-    
-    // Disable all buttons
+
+    // Disable all buttons, highlight selected
     const buttons = document.querySelectorAll('.answer-btn');
     buttons.forEach(btn => {
         btn.disabled = true;
         btn.style.opacity = '0.5';
     });
+    clickedBtn.style.opacity = '1';
+    clickedBtn.style.border = '3px solid #3498db';
 }
 
-function handleTimer(message) {
-    updateTimerDisplay(message.timer);
-}
-
-// Reveal Handling
+// Reveal — show correct/wrong on the game screen itself (no separate overlay)
 function handleReveal(message) {
     const correctIndex = message.correct_index;
-    const answers = message.answers;
     const scores = message.scores || {};
-    
-    // Calculate points
+
+    // Color the answer buttons
+    const buttons = document.querySelectorAll('.answer-btn');
+    buttons.forEach((btn, index) => {
+        btn.disabled = true;
+        if (index === correctIndex) {
+            btn.style.background = 'rgba(46, 204, 113, 0.4)';
+            btn.style.border = '3px solid #2ecc71';
+            btn.style.opacity = '1';
+        } else {
+            btn.style.background = 'rgba(231, 76, 60, 0.2)';
+            btn.style.border = '3px solid rgba(231, 76, 60, 0.4)';
+            btn.style.opacity = '0.6';
+        }
+    });
+
+    // Show points earned in timer area
     let pointsEarned = 0;
     if (scores[playerId]) {
         pointsEarned = scores[playerId].points;
     }
-    
-    // Show feedback
-    if (pointsEarned > 0) {
-        showFeedback(true, pointsEarned);
-    } else {
-        showFeedback(false, 0);
-    }
-    
-    // Update total score
     currentScore += pointsEarned;
-    document.getElementById('total-score').textContent = currentScore;
-}
 
-function showFeedback(isCorrect, points) {
-    showScreen('feedback');
-    
-    const iconEl = document.getElementById('feedback-icon');
-    const titleEl = document.getElementById('feedback-title');
-    const pointsEl = document.getElementById('feedback-points');
-    
-    if (isCorrect) {
-        iconEl.innerHTML = '<i class="fas fa-check-circle" style="color: #2ecc71;"></i>';
-        titleEl.textContent = 'Correct!';
-        titleEl.style.color = '#2ecc71';
-        pointsEl.textContent = `+${points} points`;
+    const timerEl = document.getElementById('game-timer');
+    if (pointsEarned > 0) {
+        timerEl.textContent = `+${pointsEarned}`;
+        timerEl.style.color = '#2ecc71';
     } else {
-        iconEl.innerHTML = '<i class="fas fa-times-circle" style="color: #e74c3c;"></i>';
-        titleEl.textContent = 'Wrong!';
-        titleEl.style.color = '#e74c3c';
-        pointsEl.textContent = '+0 points';
+        timerEl.textContent = '+0';
+        timerEl.style.color = '#e74c3c';
     }
+
+    // Server will auto-advance to scoreboard then next question
 }
 
-function hideFeedback() {
-    showScreen('score');
-    
-    // Check if round is complete
-    // In production, we'd check the game state from the server
-    setTimeout(() => {
-        showScreen('waiting');
-    }, 3000);
-}
-
-// Scoreboard Handling
+// Scoreboard — just update score, stay on game screen or show waiting
 function handleScoreboard(message) {
     const player = message.players.find(p => p.name === playerName);
     if (player) {
         currentScore = player.score;
-        document.getElementById('total-score').textContent = currentScore;
     }
+
+    // Show results screen briefly
+    showScreen('results');
+    document.getElementById('results-score').textContent = currentScore;
+
+    // Find our rank
+    const rank = message.players.findIndex(p => p.name === playerName) + 1;
+    const rankEl = document.getElementById('results-rank');
+    if (rankEl) rankEl.textContent = rank > 0 ? `#${rank}` : '';
 }
 
-// Final Results Handling
+// Final Results
 function handleFinalResults(message) {
     const player = message.players.find(p => p.name === playerName);
-    
-    if (player) {
-        document.getElementById('total-score').textContent = player.score;
+    if (player) currentScore = player.score;
+
+    showScreen('results');
+    document.getElementById('results-score').textContent = currentScore;
+
+    const rank = message.players.findIndex(p => p.name === playerName) + 1;
+    const rankEl = document.getElementById('results-rank');
+    if (rankEl) {
+        if (rank === 1) {
+            rankEl.textContent = '🏆 WINNER!';
+            rankEl.style.color = '#f1c40f';
+        } else {
+            rankEl.textContent = `#${rank}`;
+        }
     }
-    
-    // Show final results
-    alert('Game Over! Check the TV for final results.');
-    
-    // Reset for new game
-    resetGame();
+
+    const msgEl = document.getElementById('results-message');
+    if (msgEl) msgEl.textContent = 'Game Over! Check the TV for standings.';
 }
 
-// Utility Functions
-function showMessage(text, type) {
-    const messageEl = document.getElementById('join-message');
-    messageEl.textContent = text;
-    messageEl.style.color = type === 'error' ? '#e74c3c' : '#2ecc71';
-}
-
-function showScreen(screenName) {
-    // Hide all screens
-    Object.values(screens).forEach(screen => {
-        screen.classList.add('hidden');
-    });
-    
-    // Show requested screen
-    if (screens[screenName]) {
-        screens[screenName].classList.remove('hidden');
-    }
-}
-
-function adjustQuestionFontSize() {
-    const questionEl = document.getElementById('game-question');
-    if (questionEl) {
-        const width = questionEl.offsetWidth;
-        const charCount = questionEl.textContent.length;
-        const fontSize = Math.min(2, Math.max(1.2, width / charCount * 2));
-        questionEl.style.fontSize = `${fontSize}rem`;
-    }
-}
-
+// Utility
 function escapeHtml(text) {
     if (!text) return '';
     return text
@@ -376,17 +292,3 @@ function escapeHtml(text) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 }
-
-function resetGame() {
-    playerId = null;
-    playerName = '';
-    currentScore = 0;
-    localStorage.removeItem('playerId');
-    localStorage.removeItem('playerName');
-    showScreen('name');
-}
-
-// Auto-start timer when page loads
-window.addEventListener('load', () => {
-    adjustQuestionFontSize();
-});

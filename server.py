@@ -214,12 +214,13 @@ async def broadcast_player_update():
     })
 
 async def send_question_to_all():
-    """Send current question to all clients."""
+    """Send current question to TV and all players."""
     question = game_state.current_question
     if not question:
         return
     
-    await send_to_tv({
+    # Send to TV (includes correct_index for display)
+    tv_msg = {
         "type": "question",
         "question": {
             "category": question["category"],
@@ -230,7 +231,26 @@ async def send_question_to_all():
         "timer": game_state.timer,
         "question_num": game_state.current_question_index + 1,
         "total_questions": NUM_QUESTIONS_PER_GAME
-    })
+    }
+    await send_to_tv(tv_msg)
+    
+    # Send to players (WITHOUT correct_index to prevent cheating)
+    player_msg = {
+        "type": "question",
+        "question": {
+            "category": question["category"],
+            "question": question["question"],
+            "answers": question["answers"]
+        },
+        "timer": game_state.timer,
+        "question_num": game_state.current_question_index + 1,
+        "total_questions": NUM_QUESTIONS_PER_GAME
+    }
+    for connection in player_connections[:]:
+        try:
+            await connection.send_json(player_msg)
+        except Exception:
+            pass
 
 async def send_reveal_to_all():
     """Send reveal information to all clients."""
@@ -277,30 +297,42 @@ async def send_reveal_to_all():
             pass
 
 async def send_scoreboard_to_all():
-    """Send scoreboard to all clients."""
+    """Send scoreboard to TV and all players."""
     player_list = [{"id": pid, "name": p["name"], "score": p["score"]} 
                    for pid, p in sorted(game_state.players.items(), 
                                        key=lambda x: x[1]["score"], reverse=True)]
     
-    await send_to_tv({
+    msg = {
         "type": "scoreboard",
         "players": player_list,
         "next_question_index": game_state.current_question_index + 1
-    })
+    }
+    await send_to_tv(msg)
+    for connection in player_connections[:]:
+        try:
+            await connection.send_json(msg)
+        except Exception:
+            pass
 
 async def send_final_results():
-    """Send final results to all clients."""
+    """Send final results to TV and all players."""
     player_list = [{"id": pid, "name": p["name"], "score": p["score"]} 
                    for pid, p in sorted(game_state.players.items(), 
                                        key=lambda x: x[1]["score"], reverse=True)]
     
     winner = player_list[0] if player_list else None
     
-    await send_to_tv({
+    msg = {
         "type": "final_results",
         "players": player_list,
         "winner": winner
-    })
+    }
+    await send_to_tv(msg)
+    for connection in player_connections[:]:
+        try:
+            await connection.send_json(msg)
+        except Exception:
+            pass
 
 # WebSocket endpoints
 @app.websocket("/ws/tv")
@@ -382,25 +414,10 @@ async def player_websocket(websocket: WebSocket):
         await broadcast_player_update()
 
 # HTTP endpoints
-@app.get("/", response_class=HTMLResponse)
-async def join_page(request: Request):
-    """Serve the join page."""
-    # Get local IP
-    import socket
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(("8.8.8.8", 80))
-        local_ip = s.getsockname()[0]
-    except Exception:
-        local_ip = "127.0.0.1"
-    finally:
-        s.close()
-    
-    return templates.TemplateResponse("join.html", {
-        "request": request,
-        "join_url": f"http://{local_ip}:8080",
-        "qr_url": f"http://{local_ip}:8080/qrcode"
-    })
+@app.get("/")
+async def root_page(request: Request):
+    """Root URL redirects to player page (single join experience)."""
+    return templates.TemplateResponse("player.html", {"request": request})
 
 @app.get("/tv")
 async def tv_page(request: Request):
