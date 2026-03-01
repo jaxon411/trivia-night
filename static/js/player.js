@@ -192,11 +192,11 @@ function submitAnswer(answerIndex, clickedBtn) {
         index: answerIndex
     }));
 
-    // Disable all buttons, highlight selected
+    // Highlight selected, dim others (but keep them tappable to change answer)
     const buttons = document.querySelectorAll('.answer-btn');
     buttons.forEach(btn => {
-        btn.disabled = true;
         btn.style.opacity = '0.5';
+        btn.style.border = '3px solid rgba(255,255,255,0.15)';
     });
     clickedBtn.style.opacity = '1';
     clickedBtn.style.border = '3px solid #3498db';
