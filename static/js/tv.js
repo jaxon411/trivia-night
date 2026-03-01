@@ -9,12 +9,25 @@ let questions = [];
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     connectWebSocket();
+    fetchQRCode();
     
     // Handle window resize
     window.addEventListener('resize', () => {
         adjustFontSize();
     });
 });
+
+function fetchQRCode() {
+    fetch('/qrcode')
+        .then(res => res.json())
+        .then(data => {
+            const qrImg = document.getElementById('tv-qr-code');
+            if (qrImg) qrImg.src = 'data:image/png;base64,' + data.qr_code;
+            const urlEl = document.getElementById('tv-join-url');
+            if (urlEl) urlEl.textContent = data.url;
+        })
+        .catch(err => console.error('Error fetching QR:', err));
+}
 
 function connectWebSocket() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -56,7 +69,7 @@ function handleServerMessage(message) {
             showReveal(message.correct_index, message.answers, message.scores);
             break;
         case 'scoreboard':
-            showScoreboard(message.players);
+            displayScoreboard(message.players);
             break;
         case 'final_results':
             showFinalResults(message.players, message.winner);
@@ -182,32 +195,9 @@ function showQuestion(question, timer, questionNum, totalQuestions) {
         answersGrid.appendChild(card);
     });
     
-    // Update timer
+    // Update timer (server drives the countdown via WS messages)
     document.getElementById('timer-text').textContent = timer;
     document.getElementById('timer-bar').style.width = '100%';
-    
-    // Start timer
-    startTimer(timer);
-}
-
-function startTimer(seconds) {
-    if (timerInterval) {
-        clearInterval(timerInterval);
-    }
-    
-    let remaining = seconds;
-    document.getElementById('timer-text').textContent = remaining;
-    document.getElementById('timer-bar').style.width = '100%';
-    
-    timerInterval = setInterval(() => {
-        remaining--;
-        document.getElementById('timer-text').textContent = remaining;
-        document.getElementById('timer-bar').style.width = `${(remaining / seconds) * 100}%`;
-        
-        if (remaining <= 0) {
-            clearInterval(timerInterval);
-        }
-    }, 1000);
 }
 
 function updateTimer(timer) {
@@ -262,14 +252,11 @@ function showReveal(correctIndex, answers, scores) {
         // This is a simplified version - in production, we'd fetch full player data
     }
     
-    // Auto-advance to scoreboard after 5 seconds
-    setTimeout(() => {
-        showScoreboard();
-    }, 5000);
+    // Server auto-advances to scoreboard after 5 seconds
 }
 
 // Scoreboard View Functions
-function showScoreboard(players) {
+function displayScoreboard(players) {
     document.getElementById('view-scoreboard').classList.add('active');
     document.getElementById('view-reveal').classList.remove('active');
     
@@ -302,10 +289,7 @@ function showScoreboard(players) {
         scoreboardList.appendChild(row);
     });
     
-    // Auto-advance to next question after 5 seconds
-    setTimeout(() => {
-        nextQuestion();
-    }, 5000);
+    // Server auto-advances to next question after 5 seconds
 }
 
 // Final Results Functions

@@ -53,6 +53,7 @@ class GameState:
         self.question_start_time: Optional[float] = None
         self.players_who_answered: Set[str] = set()
         self.game_over = False
+        self.timer_generation = 0  # Incremented each question to cancel stale timers
 
 game_state = GameState()
 
@@ -479,31 +480,42 @@ async def next_question():
     game_state.answers = {}
     game_state.players_who_answered = set()
     game_state.question_start_time = None
+    game_state.timer_generation += 1  # Cancel any previous timer
     
     game_state.state = STATE_QUESTION
     await send_question_to_all()
     
-    # Start timer countdown
-    await start_timer()
+    # Start timer as a background task (don't await — let the endpoint return)
+    asyncio.create_task(start_timer(game_state.timer_generation))
     
     return {"status": "question_started", "question_index": game_state.current_question_index}
 
-async def start_timer():
-    """Start the question timer."""
+async def start_timer(generation: int):
+    """Start the question timer. Stops if generation changes (new question started)."""
     global game_state
     
-    while game_state.state == STATE_QUESTION and game_state.timer > 0:
+    while (game_state.state == STATE_QUESTION 
+           and game_state.timer > 0 
+           and game_state.timer_generation == generation):
         await asyncio.sleep(1)
+        if game_state.timer_generation != generation:
+            return  # Stale timer, bail
         game_state.timer -= 1
         
-        # Send timer update
-        await send_to_tv({
+        # Send timer update to TV and all players
+        timer_msg = {
             "type": "timer",
             "timer": game_state.timer,
             "question_num": game_state.current_question_index + 1
-        })
+        }
+        await send_to_tv(timer_msg)
+        for connection in player_connections[:]:
+            try:
+                await connection.send_json(timer_msg)
+            except Exception:
+                pass
     
-    if game_state.state == STATE_QUESTION:
+    if game_state.state == STATE_QUESTION and game_state.timer_generation == generation:
         # Timer expired, move to reveal
         await move_to_reveal()
 

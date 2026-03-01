@@ -57,8 +57,7 @@ function connectWebSocket() {
     ws = new WebSocket(wsUrl);
     
     ws.onopen = () => {
-        if (playerId) {
-            // Reconnect with existing player ID
+        if (playerName) {
             ws.send(JSON.stringify({
                 type: 'join',
                 name: playerName
