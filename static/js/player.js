@@ -46,8 +46,14 @@ function showScreen(screenName) {
 }
 
 // WebSocket Connection
+let wsRetryTimeout = null;
+
 function connectWebSocket() {
-    if (ws && ws.readyState === WebSocket.OPEN) return;
+    // Guard against duplicate connections
+    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+
+    // Clear any pending retry
+    if (wsRetryTimeout) { clearTimeout(wsRetryTimeout); wsRetryTimeout = null; }
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws/player`;
@@ -66,12 +72,39 @@ function connectWebSocket() {
     };
 
     ws.onclose = () => {
-        setTimeout(connectWebSocket, 2000);
+        ws = null;
+        // Only auto-reconnect if we were already in the game
+        if (playerId) {
+            wsRetryTimeout = setTimeout(connectWebSocket, 2000);
+        }
     };
 
     ws.onerror = (error) => {
         console.error('WebSocket error:', error);
     };
+
+    // Timeout: if not joined within 8 seconds, show error and let them retry
+    setTimeout(() => {
+        if (!playerId) {
+            showJoinError();
+        }
+    }, 8000);
+}
+
+function showJoinError() {
+    const joinBtn = document.getElementById('join-btn');
+    if (joinBtn) {
+        joinBtn.disabled = false;
+        joinBtn.innerHTML = '<i class="fas fa-paper-plane"></i> JOIN';
+    }
+    const msgEl = document.getElementById('join-message');
+    if (msgEl) {
+        msgEl.textContent = 'Connection failed — try again!';
+        msgEl.style.color = '#e74c3c';
+    }
+    // Close stale WS
+    if (ws) { try { ws.close(); } catch(e) {} ws = null; }
+    showScreen('name');
 }
 
 // Handle Server Messages
