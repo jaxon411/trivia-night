@@ -1,0 +1,968 @@
+[
+  {
+    "category": "Science",
+    "question": "What is the chemical symbol for Gold?",
+    "answers": ["Au", "Ag", "Fe", "Pb"],
+    "correct": 0
+  },
+  {
+    "category": "Science",
+    "question": "What is the powerhouse of the cell?",
+    "answers": ["Nucleus", "Mitochondria", "Ribosome", "Cytoplasm"],
+    "correct": 1
+  },
+  {
+    "category": "Science",
+    "question": "What planet is known as the Red Planet?",
+    "answers": ["Venus", "Jupiter", "Mars", "Saturn"],
+    "correct": 2
+  },
+  {
+    "category": "Science",
+    "question": "What gas do plants absorb from the atmosphere?",
+    "answers": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+    "correct": 2
+  },
+  {
+    "category": "Science",
+    "question": "What is the hardest natural substance on Earth?",
+    "answers": ["Gold", "Iron", "Diamond", "Platinum"],
+    "correct": 2
+  },
+  {
+    "category": "Science",
+    "question": "How many bones are in the adult human body?",
+    "answers": ["206", "208", "210", "212"],
+    "correct": 0
+  },
+  {
+    "category": "Science",
+    "question": "What is the speed of light?",
+    "answers": ["299,792,458 m/s", "300,000,000 m/s", "150,000,000 m/s", "98,000,000 m/s"],
+    "correct": 0
+  },
+  {
+    "category": "Science",
+    "question": "What is the most abundant gas in the universe?",
+    "answers": ["Oxygen", "Carbon Dioxide", "Hydrogen", "Helium"],
+    "correct": 2
+  },
+  {
+    "category": "Science",
+    "question": "What part of the atom has no electric charge?",
+    "answers": ["Proton", "Electron", "Neutron", "Nucleus"],
+    "correct": 2
+  },
+  {
+    "category": "Science",
+    "question": "Which organ in the human body produces insulin?",
+    "answers": ["Liver", "Pancreas", "Kidney", "Stomach"],
+    "correct": 1
+  },
+  {
+    "category": "Science",
+    "question": "What is the chemical formula for table salt?",
+    "answers": ["H2O", "NaCl", "CO2", "KCl"],
+    "correct": 1
+  },
+  {
+    "category": "Science",
+    "question": "What is the study of fungi called?",
+    "answers": ["Botany", "Mycology", "Zoology", "Virology"],
+    "correct": 1
+  },
+  {
+    "category": "Science",
+    "question": "What is the smallest unit of matter?",
+    "answers": ["Molecule", "Atom", "Proton", "Electron"],
+    "correct": 1
+  },
+  {
+    "category": "Science",
+    "question": "Which blood type is the universal donor?",
+    "answers": ["A", "B", "AB", "O"],
+    "correct": 3
+  },
+  {
+    "category": "Science",
+    "question": "What is the main gas found in the air we breathe?",
+    "answers": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "Who was the first President of the United States?",
+    "answers": ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "In which year did World War II end?",
+    "answers": ["1943", "1944", "1945", "1946"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "Who built the pyramids?",
+    "answers": ["Romans", "Greeks", "Egyptians", "Mayans"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "What ancient civilization built Machu Picchu?",
+    "answers": ["Aztecs", "Mayans", "Incas", "Olmecs"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "Who was the first female Prime Minister of the UK?",
+    "answers": ["Theresa May", "Margaret Thatcher", "Queen Elizabeth II", "Indira Gandhi"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "What was the name of the ship that sank in 1912?",
+    "answers": ["Lusitania", "Titanic", "Britannic", "Olympic"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "Who painted the Mona Lisa?",
+    "answers": ["Michelangelo", "Raphael", "Leonardo da Vinci", "Donatello"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "Which empire was ruled by Julius Caesar?",
+    "answers": ["Greek", "Roman", "Ottoman", "British"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "What year did the Berlin Wall fall?",
+    "answers": ["1987", "1989", "1991", "1993"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "Who discovered America in 1492?",
+    "answers": ["Christopher Columbus", "Vasco da Gama", "Ferdinand Magellan", "James Cook"],
+    "correct": 0
+  },
+  {
+    "category": "History",
+    "question": "What was the name of the first man in space?",
+    "answers": ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Alan Shepard"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "Which war was fought between the North and South regions of the US?",
+    "answers": ["Revolutionary War", "Civil War", "War of 1812", "Vietnam War"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "Who wrote the Declaration of Independence?",
+    "answers": ["George Washington", "Benjamin Franklin", "Thomas Jefferson", "John Hancock"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "What was the name of the first permanent English colony in America?",
+    "answers": ["Plymouth", "Jamestown", "Roanoke", "Virginia"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "Who was the last Tsar of Russia?",
+    "answers": ["Ivan the Terrible", "Peter the Great", "Nicholas II", "Alexander I"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who is the creator of Star Wars?",
+    "answers": ["Steven Spielberg", "George Lucas", "James Cameron", "J.J. Abrams"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which band performed the song 'Bohemian Rhapsody'?",
+    "answers": ["The Beatles", "Led Zeppelin", "Queen", "Pink Floyd"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "What is the name of the fictional city where Batman lives?",
+    "answers": ["Metropolis", "Gotham City", "Star City", "Central City"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who played Iron Man in the Marvel Cinematic Universe?",
+    "answers": ["Chris Evans", "Chris Hemsworth", "Robert Downey Jr.", "Mark Ruffalo"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which TV show features the characters Ross and Rachel?",
+    "answers": ["Seinfeld", "The Office", "Friends", "Brooklyn Nine-Nine"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who is the King of Pop?",
+    "answers": ["Elvis Presley", "Michael Jackson", "Prince", "Freddie Mercury"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "What is the name of the toy cowboy in Toy Story?",
+    "answers": ["Buzz", "Woody", "Jessie", "Andy"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which movie won the first Academy Award for Best Animated Feature?",
+    "answers": ["Shrek", "Toy Story", "Finding Nemo", "Monsters, Inc."],
+    "correct": 0
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who wrote the Harry Potter series?",
+    "answers": ["J.R.R. Tolkien", "George R.R. Martin", "J.K. Rowling", "Stephen King"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "What is the highest-grossing movie of all time (as of 2024)?",
+    "answers": ["Avatar", "Avengers: Endgame", "Titanic", "Star Wars: The Force Awakens"],
+    "correct": 0
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which video game franchise features Master Chief?",
+    "answers": ["Call of Duty", "Halo", "Gears of War", "Battlefield"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who is the lead singer of U2?",
+    "answers": ["Sting", "Bono", "Robert Plant", "Kurt Cobain"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "What is the name of the hobbit in The Lord of the Rings?",
+    "answers": ["Aragorn", "Gandalf", "Frodo", "Legolas"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which superhero is known as the 'Man of Steel'?",
+    "answers": ["Batman", "Iron Man", "Superman", "Thor"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who played the role of Jack Dawson in Titanic?",
+    "answers": ["Brad Pitt", "Tom Cruise", "Leonardo DiCaprio", "Johnny Depp"],
+    "correct": 2
+  },
+  {
+    "category": "Pop Culture",
+    "question": "What is the name of the coffee shop in Friends?",
+    "answers": ["Peet's", "Dunkin'", "Central Perk", "Starbucks"],
+    "correct": 2
+  },
+  {
+    "category": "Geography",
+    "question": "What is the largest continent on Earth?",
+    "answers": ["Africa", "North America", "Asia", "Europe"],
+    "correct": 2
+  },
+  {
+    "category": "Geography",
+    "question": "What is the capital of France?",
+    "answers": ["London", "Berlin", "Madrid", "Paris"],
+    "correct": 3
+  },
+  {
+    "category": "Geography",
+    "question": "Which river is the longest in the world?",
+    "answers": ["Amazon", "Nile", "Yangtze", "Mississippi"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "What country has the largest population?",
+    "answers": ["India", "China", "United States", "Indonesia"],
+    "correct": 0
+  },
+  {
+    "category": "Geography",
+    "question": "Which ocean is the largest?",
+    "answers": ["Atlantic", "Indian", "Arctic", "Pacific"],
+    "correct": 3
+  },
+  {
+    "category": "Geography",
+    "question": "What is the smallest country in the world?",
+    "answers": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "answers": ["China", "Japan", "Thailand", "South Korea"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "What is the capital of Australia?",
+    "answers": ["Sydney", "Melbourne", "Canberra", "Perth"],
+    "correct": 2
+  },
+  {
+    "category": "Geography",
+    "question": "Which desert is the largest in the world?",
+    "answers": ["Sahara", "Gobi", "Antarctic Desert", "Arabian"],
+    "correct": 2
+  },
+  {
+    "category": "Geography",
+    "question": "What country is famous for the Great Barrier Reef?",
+    "answers": ["Brazil", "Australia", "Indonesia", "Philippines"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "Which mountain is the tallest in the world?",
+    "answers": ["K2", "Mount Everest", "Kilimanjaro", "Denali"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "What is the capital of Canada?",
+    "answers": ["Toronto", "Vancouver", "Montreal", "Ottawa"],
+    "correct": 3
+  },
+  {
+    "category": "Geography",
+    "question": "Which country has the most islands?",
+    "answers": ["Philippines", "Indonesia", "Sweden", "Canada"],
+    "correct": 2
+  },
+  {
+    "category": "Geography",
+    "question": "What is the longest river in South America?",
+    "answers": ["Amazon", "Parana", "Orinoco", "Madeira"],
+    "correct": 0
+  },
+  {
+    "category": "Geography",
+    "question": "Which U.S. state is the largest by area?",
+    "answers": ["Texas", "California", "Alaska", "Montana"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "Which sport is played in the Super Bowl?",
+    "answers": ["Baseball", "Basketball", "Football", "Soccer"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "How many players are on a basketball team?",
+    "answers": ["5", "6", "7", "8"],
+    "correct": 0
+  },
+  {
+    "category": "Sports",
+    "question": "Which country won the first FIFA World Cup?",
+    "answers": ["Brazil", "Argentina", "Uruguay", "Italy"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "What is the national sport of Japan?",
+    "answers": ["Baseball", "Judo", "Sumo Wrestling", "Karate"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "Who holds the record for most Olympic gold medals?",
+    "answers": ["Usain Bolt", "Michael Phelps", "Carl Lewis", "Mark Spitz"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "What is the maximum score in a game of ten-pin bowling?",
+    "answers": ["200", "250", "300", "350"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "Which sport is played at Wimbledon?",
+    "answers": ["Golf", "Tennis", "Cricket", "Rugby"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "How long is a marathon?",
+    "answers": ["20 miles", "26.2 miles", "30 miles", "24 miles"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "Which country is famous forsumo wrestling?",
+    "answers": ["China", "Korea", "Japan", "Thailand"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "What is the national sport of Canada?",
+    "answers": ["Ice Hockey", "Lacrosse", "Baseball", "Basketball"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "Who is known as 'The Greatest' in boxing?",
+    "answers": ["Mike Tyson", "Floyd Mayweather", "Muhammad Ali", "Rocky Marciano"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "Which NBA team has won the most championships?",
+    "answers": ["Lakers", "Celtics", "Bulls", "Warriors"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "What sport uses a shuttlecock?",
+    "answers": ["Tennis", "Badminton", "Squash", "Racketball"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "How many holes are in a standard golf course?",
+    "answers": ["9", "18", "27", "36"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "Which country hosted the first modern Olympic Games?",
+    "answers": ["France", "United States", "Greece", "United Kingdom"],
+    "correct": 2
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the main ingredient in guacamole?",
+    "answers": ["Tomato", "Onion", "Avocado", "Lime"],
+    "correct": 2
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which country is famous for pizza?",
+    "answers": ["France", "USA", "Italy", "Greece"],
+    "correct": 2
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the traditional Japanese soy sauce called?",
+    "answers": ["Teriyaki", "Miso", "Shoyu", "Wasabi"],
+    "correct": 2
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which fruit is known as the 'king of fruits' and smells terrible?",
+    "answers": ["Pineapple", "Mango", "Durian", "Jackfruit"],
+    "correct": 2
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the primary ingredient in hummus?",
+    "answers": ["Chickpeas", "Lentils", "Black Beans", "Edamame"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which cheese is traditionally used on pizza?",
+    "answers": ["Cheddar", "Mozzarella", "Parmesan", "Gouda"],
+    "correct": 1
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the main ingredient in traditional sushi?",
+    "answers": ["Cooked rice", "Raw fish", "Seaweed", "Soy sauce"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which country is famous for chocolate?",
+    "answers": ["Switzerland", "Belgium", "Germany", "France"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the most popular soft drink in the world?",
+    "answers": ["Pepsi", "Coca-Cola", "Sprite", "Fanta"],
+    "correct": 1
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which herb is essential for making pesto?",
+    "answers": ["Basil", "Parsley", "Cilantro", "Mint"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the main ingredient in traditional Spanish paella?",
+    "answers": ["Rice", "Pasta", "Potatoes", "Bread"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which country is credited with inventing ice cream?",
+    "answers": ["Italy", "France", "China", "United States"],
+    "correct": 2
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the primary ingredient in traditional Mexican tamales?",
+    "answers": ["Corn masa", "Wheat flour", "Rice", "Potatoes"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which wine region is in France?",
+    "answers": ["Napa Valley", "Mendoza", "Bordeaux", "Marlborough"],
+    "correct": 2
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the main ingredient in traditional Japanese miso soup?",
+    "answers": ["Seaweed", "Miso paste", "Soy sauce", "Tofu"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "What does CPU stand for?",
+    "answers": ["Central Processing Unit", "Computer Personal Unit", "Central Processor Utility", "Core Processing Unit"],
+    "correct": 0
+  },
+  {
+    "category": "Technology",
+    "question": "Who founded Microsoft?",
+    "answers": ["Steve Jobs", "Bill Gates", "Mark Zuckerberg", "Elon Musk"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "What does WWW stand for?",
+    "answers": ["World Wide Web", "World Web Wide", "Wide World Web", "Web World Wide"],
+    "correct": 0
+  },
+  {
+    "category": "Technology",
+    "question": "What is the name of Apple's virtual assistant?",
+    "answers": ["Alexa", "Siri", "Google Assistant", "Cortana"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "Which social media app was originally called 'TikTok'?",
+    "answers": ["Snapchat", "Instagram", "TikTok", "Twitter"],
+    "correct": 2
+  },
+  {
+    "category": "Technology",
+    "question": "What does RAM stand for?",
+    "answers": ["Read Access Memory", "Random Access Memory", "Run All Memory", "Real Access Memory"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "Which company owns Android?",
+    "answers": ["Apple", "Microsoft", "Google", "Samsung"],
+    "correct": 2
+  },
+  {
+    "category": "Technology",
+    "question": "What year was the first iPhone released?",
+    "answers": ["2005", "2007", "2009", "2011"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "What does USB stand for?",
+    "answers": ["Universal Serial Bus", "United State Bus", "Universal System Bus", "Unique Serial Bus"],
+    "correct": 0
+  },
+  {
+    "category": "Technology",
+    "question": "Which programming language is known as the 'language of the web'?",
+    "answers": ["Python", "Java", "JavaScript", "C++"],
+    "correct": 2
+  },
+  {
+    "category": "Technology",
+    "question": "What is the main function of an operating system?",
+    "answers": ["Browse the internet", "Manage hardware and software", "Play games", "Write documents"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "Who is the founder of Tesla?",
+    "answers": ["Jeff Bezos", "Elon Musk", "Richard Branson", "Larry Page"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "What does SSD stand for?",
+    "answers": ["Solid State Drive", "Super Speed Disk", "Single Storage Disk", "System Storage Device"],
+    "correct": 0
+  },
+  {
+    "category": "Technology",
+    "question": "Which company makes the Graphics Processing Unit (GPU)?",
+    "answers": ["Intel", "AMD", "NVIDIA", "Qualcomm"],
+    "correct": 2
+  },
+  {
+    "category": "Technology",
+    "question": "What is the standard port for connecting keyboards and mice?",
+    "answers": ["USB", "HDMI", "VGA", "DVI"],
+    "correct": 0
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who played the Joker in The Dark Knight?",
+    "answers": ["Jack Nicholson", "Heath Ledger", "Joaquin Phoenix", "Cillian Murphy"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Which TV series features dragons and the slogan 'Winter is Coming'?",
+    "answers": ["The Witcher", "Lord of the Rings", "Game of Thrones", "Vikings"],
+    "correct": 2
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who directed the movie Jaws?",
+    "answers": ["George Lucas", "Steven Spielberg", "Martin Scorsese", "Francis Ford Coppola"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "What is the name of the hobbit in Lord of the Rings?",
+    "answers": ["Aragorn", "Bilbo", "Gandalf", "Sauron"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Which show features a group of friends in a coffee shop?",
+    "answers": ["Seinfeld", "The Office", "Friends", "How I Met Your Mother"],
+    "correct": 2
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who played Iron Man in the Marvel movies?",
+    "answers": ["Chris Evans", "Robert Downey Jr.", "Chris Hemsworth", "Mark Ruffalo"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "What is the name of the town in Stranger Things?",
+    "answers": ["Sunnyvale", "Hawkins", "Springfield", "Rosewood"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Which movie features the song 'Let It Go'?",
+    "answers": ["Tangled", "Frozen", "Moana", "Coco"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who played Jack Dawson in Titanic?",
+    "answers": ["Brad Pitt", "Tom Cruise", "Leonardo DiCaprio", "Johnny Depp"],
+    "correct": 2
+  },
+  {
+    "category": "Movies & TV",
+    "question": "What is the highest-rated TV series on IMDb?",
+    "answers": ["Breaking Bad", "Game of Thrones", "The Wire", "Planet Earth"],
+    "correct": 0
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Which actor plays Wolverine in X-Men?",
+    "answers": ["Chris Evans", "Ryan Reynolds", "Hugh Jackman", "Michael Fassbender"],
+    "correct": 2
+  },
+  {
+    "category": "Movies & TV",
+    "question": "What year was the first Star Wars movie released?",
+    "answers": ["1975", "1977", "1979", "1981"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Which animated movie features a clownfish named Nemo?",
+    "answers": ["Finding Nemo", "The Lion King", "Toy Story", "Shrek"],
+    "correct": 0
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who played the lead role in Breaking Bad?",
+    "answers": ["Aaron Paul", "Bryan Cranston", "Vince Gilligan", "Dean Norris"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "What is the name of the wizarding school in Harry Potter?",
+    "answers": ["Hogwarts", "Beauxbatons", "Durmstrang", "Ilvermorny"],
+    "correct": 0
+  },
+  {
+    "category": "Science",
+    "question": "What is the smallest unit of life?",
+    "answers": ["Tissue", "Organ", "Cell", "Atom"],
+    "correct": 2
+  },
+  {
+    "category": "Science",
+    "question": "Which planet has the most moons?",
+    "answers": ["Jupiter", "Saturn", "Uranus", "Neptune"],
+    "correct": 1
+  },
+  {
+    "category": "Science",
+    "question": "What is the chemical symbol for Silver?",
+    "answers": ["Si", "Ag", "Au", "Sv"],
+    "correct": 1
+  },
+  {
+    "category": "Science",
+    "question": "How many hearts does an octopus have?",
+    "answers": ["1", "2", "3", "4"],
+    "correct": 2
+  },
+  {
+    "category": "Science",
+    "question": "What is the main gas in Jupiter's atmosphere?",
+    "answers": ["Hydrogen", "Helium", "Methane", "Ammonia"],
+    "correct": 0
+  },
+  {
+    "category": "History",
+    "question": "Who was the first woman to fly solo across the Atlantic?",
+    "answers": ["Bessie Coleman", "Amelia Earhart", "Sally Ride", "Valentina Tereshkova"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "What was the name of the first artificial satellite?",
+    "answers": ["Apollo", "Sputnik", "Voyager", "Explorer"],
+    "correct": 1
+  },
+  {
+    "category": "History",
+    "question": "Which civilization developed the concept of zero?",
+    "answers": ["Romans", "Greeks", "Indians", "Egyptians"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "Who was the first Emperor of Rome?",
+    "answers": ["Julius Caesar", "Nero", "Augustus", "Caligula"],
+    "correct": 2
+  },
+  {
+    "category": "History",
+    "question": "What year did the Titanic sink?",
+    "answers": ["1910", "1912", "1914", "1916"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which band released the album 'Abbey Road'?",
+    "answers": ["The Rolling Stones", "The Beatles", "Led Zeppelin", "Pink Floyd"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who is the mascot of Nintendo?",
+    "answers": ["Sonic", "Mario", "Link", "Master Chief"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which movie features the quote 'May the Force be with you'?",
+    "answers": ["Star Trek", "Star Wars", "E.T.", "Close Encounters"],
+    "correct": 1
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Who plays the Doctor in Doctor Who?",
+    "answers": ["David Tennant", "Matt Smith", "Doctor Who", "The Doctor"],
+    "correct": 3
+  },
+  {
+    "category": "Pop Culture",
+    "question": "Which superhero is the Flash?",
+    "answers": ["Barry Allen", "Clark Kent", "Bruce Wayne", "Tony Stark"],
+    "correct": 0
+  },
+  {
+    "category": "Geography",
+    "question": "Which country is known as the Land of Fire and Ice?",
+    "answers": ["Greenland", "Iceland", "Norway", "Finland"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "What is the capital of Brazil?",
+    "answers": ["Rio de Janeiro", "Sao Paulo", "Brasilia", "Salvador"],
+    "correct": 2
+  },
+  {
+    "category": "Geography",
+    "question": "Which river flows through London?",
+    "answers": ["Seine", "Thames", "Danube", "Rhine"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "What is the largest island in the world?",
+    "answers": ["Madagascar", "Greenland", "Borneo", "Sumatra"],
+    "correct": 1
+  },
+  {
+    "category": "Geography",
+    "question": "Which country has the most natural lakes?",
+    "answers": ["USA", "Canada", "Russia", "Brazil"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "What is the national sport of Brazil?",
+    "answers": ["Volleyball", "Capoeira", "Football", "Surfing"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "How long is a penalty shootout?",
+    "answers": ["3 rounds", "5 rounds", "7 rounds", "10 rounds"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "Which sport is played in the Wimbledon tournament?",
+    "answers": ["Golf", "Tennis", "Cricket", "Rugby"],
+    "correct": 1
+  },
+  {
+    "category": "Sports",
+    "question": "Who has the most home runs in MLB history?",
+    "answers": ["Babe Ruth", "Hank Aaron", "Barry Bonds", "Mark McGwire"],
+    "correct": 2
+  },
+  {
+    "category": "Sports",
+    "question": "What is the national sport of Australia?",
+    "answers": ["Cricket", "Rugby", "Netball", "Swimming"],
+    "correct": 1
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the main ingredient in traditional Chinese dumplings?",
+    "answers": ["Flour", "Rice", "Corn", "Potatoes"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which country is famous for tacos?",
+    "answers": ["Spain", "Mexico", "Peru", "Costa Rica"],
+    "correct": 1
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the primary ingredient in traditional Italian pesto?",
+    "answers": ["Basil", "Parsley", "Cilantro", "Mint"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "Which cheese is used in traditional Greek moussaka?",
+    "answers": ["Feta", "Mozzarella", "Cheddar", "Parmesan"],
+    "correct": 0
+  },
+  {
+    "category": "Food & Drink",
+    "question": "What is the national dish of Japan?",
+    "answers": ["Ramen", "Sushi", "Tempura", "Yakitori"],
+    "correct": 1
+  },
+  {
+    "category": "Technology",
+    "question": "Who founded Amazon?",
+    "answers": ["Bill Gates", "Steve Jobs", "Jeff Bezos", "Mark Zuckerberg"],
+    "correct": 2
+  },
+  {
+    "category": "Technology",
+    "question": "What does HTTP stand for?",
+    "answers": ["HyperText Transfer Protocol", "HyperText Transmission Protocol", "HyperText Transport Protocol", "HyperText Terminal Protocol"],
+    "correct": 0
+  },
+  {
+    "category": "Technology",
+    "question": "Which company developed the iPhone?",
+    "answers": ["Samsung", "Google", "Apple", "Microsoft"],
+    "correct": 2
+  },
+  {
+    "category": "Technology",
+    "question": "What is the name of Google's search engine?",
+    "answers": ["Bing", "Yahoo", "Google Search", "DuckDuckGo"],
+    "correct": 2
+  },
+  {
+    "category": "Technology",
+    "question": "Which programming language is used for Android app development?",
+    "answers": ["Swift", "Java", "Kotlin", "Objective-C"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who played Darth Vader in Star Wars?",
+    "answers": ["Mark Hamill", "James Earl Jones", "Hayden Christensen", "David Prowse"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Which show features the character Walter White?",
+    "answers": ["Breaking Bad", "Better Call Saul", "The Wire", "Narcos"],
+    "correct": 0
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who directed the movie Pulp Fiction?",
+    "answers": ["Steven Spielberg", "Quentin Tarantino", "Martin Scorsese", "Francis Ford Coppola"],
+    "correct": 1
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Which animated movie features a character named WALL-E?",
+    "answers": ["Toy Story", "Finding Nemo", "WALL-E", "Shrek"],
+    "correct": 2
+  },
+  {
+    "category": "Movies & TV",
+    "question": "Who played the Joker in the 1989 Batman movie?",
+    "answers": ["Jack Nicholson", "Heath Ledger", "Joaquin Phoenix", "Cillian Murphy"],
+    "correct": 0
+  }
+]
