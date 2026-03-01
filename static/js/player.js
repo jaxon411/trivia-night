@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         results: document.getElementById('screen-results')
     };
 
-    // Check if we have a saved name (from join page redirect)
-    const savedName = localStorage.getItem('playerName');
+    // Check if we have an active session (page refresh during game)
+    const savedName = sessionStorage.getItem('playerName');
     if (savedName) {
         playerName = savedName;
         document.getElementById('player-name-display').textContent = playerName;
@@ -116,7 +116,7 @@ function joinGame() {
     }
 
     playerName = name;
-    localStorage.setItem('playerName', name);
+    sessionStorage.setItem('playerName', name);
 
     const joinBtn = document.getElementById('join-btn');
     joinBtn.disabled = true;
@@ -127,7 +127,6 @@ function joinGame() {
 
 function handleJoined(message) {
     playerId = message.player_id;
-    localStorage.setItem('playerId', playerId);
 
     document.getElementById('player-name-display').textContent = playerName;
     showScreen('waiting');
