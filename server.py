@@ -33,12 +33,30 @@ SPEED_BONUS_1 = 1500  # First 5 seconds
 SPEED_BONUS_2 = 1250  # 5-10 seconds
 SPEED_BONUS_3 = 1000  # 10-15 seconds
 
+# Category definitions (matching client-side)
+CATEGORIES = {
+    'arts_and_literature': {'name': 'Arts & Literature', 'color': '#9b59b6'},
+    'film_and_tv': {'name': 'Film & TV', 'color': '#e74c3c'},
+    'food_and_drink': {'name': 'Food & Drink', 'color': '#e67e22'},
+    'general_knowledge': {'name': 'General Knowledge', 'color': '#3498db'},
+    'geography': {'name': 'Geography', 'color': '#2ecc71'},
+    'history': {'name': 'History', 'color': '#f39c12'},
+    'music': {'name': 'Music', 'color': '#1abc9c'},
+    'science': {'name': 'Science', 'color': '#8e44ad'},
+    'society_and_culture': {'name': 'Society & Culture', 'color': '#e91e63'},
+    'sport_and_leisure': {'name': 'Sport & Leisure', 'color': '#ff9800'}
+}
+
 # Game states
 STATE_LOBBY = "lobby"
 STATE_QUESTION = "question"
 STATE_REVEAL = "reveal"
 STATE_SCOREBOARD = "scoreboard"
 STATE_FINAL = "final"
+
+# Voting system states
+STATE_VOTE = "vote"
+STATE_WHEEL = "wheel"
 
 # Game state
 class GameState:
@@ -54,6 +72,15 @@ class GameState:
         self.players_who_answered: Set[str] = set()
         self.game_over = False
         self.timer_generation = 0  # Incremented each question to cancel stale timers
+        self.difficulty: Optional[str] = None  # None = mixed, "easy", "medium", "hard"
+        
+        # Voting system fields
+        self.vote_categories: List[dict] = []  # [{id, name, color}, ...]
+        self.votes: Dict[str, int] = {}  # category_id -> vote_count
+        self.current_block = 0
+        self.blocks = [3, 3, 4]  # Questions per block
+        self.players_who_voted: Dict[str, str] = {}  # player_id -> category_id
+        self.block_question_index = 0  # tracks position within current block
 
 game_state = GameState()
 
@@ -95,10 +122,13 @@ def load_questions_from_file() -> List[dict]:
     return normalized
 
 # Fetch questions from The Trivia API
-def fetch_trivia_api_questions() -> List[dict]:
+def fetch_trivia_api_questions(difficulty: Optional[str] = None) -> List[dict]:
     """Fetch questions from the primary API."""
+    url = TRIVIA_API_URL
+    if difficulty:
+        url += f"&difficulties={difficulty}"
     try:
-        with urllib.request.urlopen(TRIVIA_API_URL, timeout=10) as response:
+        with urllib.request.urlopen(url, timeout=10) as response:
             data = json.loads(response.read().decode())
         
         # Normalize format
@@ -124,10 +154,13 @@ def fetch_trivia_api_questions() -> List[dict]:
         return []
 
 # Fetch questions from Open Trivia DB
-def fetch_opentdb_questions() -> List[dict]:
+def fetch_opentdb_questions(difficulty: Optional[str] = None) -> List[dict]:
     """Fetch questions from the backup API."""
+    url = OPENTDB_API_URL
+    if difficulty:
+        url += f"&difficulty={difficulty}"
     try:
-        with urllib.request.urlopen(OPENTDB_API_URL, timeout=10) as response:
+        with urllib.request.urlopen(url, timeout=10) as response:
             data = json.loads(response.read().decode())
         
         if data.get("response_code", 1) != 0:
@@ -162,16 +195,16 @@ def fetch_opentdb_questions() -> List[dict]:
         return []
 
 # Fetch questions from all sources
-def fetch_questions() -> List[dict]:
+def fetch_questions(difficulty: Optional[str] = None) -> List[dict]:
     """Fetch questions from APIs with fallback to local file."""
     # Try primary API first
-    questions = fetch_trivia_api_questions()
+    questions = fetch_trivia_api_questions(difficulty)
     if questions:
         print(f"Fetched {len(questions)} questions from The Trivia API")
         return questions
     
     # Try backup API
-    questions = fetch_opentdb_questions()
+    questions = fetch_opentdb_questions(difficulty)
     if questions:
         print(f"Fetched {len(questions)} questions from Open Trivia DB")
         return questions
@@ -184,6 +217,61 @@ def fetch_questions() -> List[dict]:
     
     print("No questions available!")
     return []
+
+# Fetch questions for a specific category (used in voting system)
+def fetch_questions_for_category(category_id: str, difficulty: Optional[str], count: int) -> List[dict]:
+    """
+    Fetch questions for a specific category.
+    Fetches extra questions to handle potential duplicates.
+    """
+    # Build API URL for The Trivia API with category filter
+    url = f"https://the-trivia-api.com/v2/questions?limit={count + 5}&categories={category_id}&types=text_choice"
+    if difficulty:
+        url += f"&difficulties={difficulty}"
+    
+    try:
+        with urllib.request.urlopen(url, timeout=10) as response:
+            data = json.loads(response.read().decode())
+        
+        # Normalize format and filter by category
+        filtered = []
+        for q in data:
+            # Normalize format
+            all_answers = [q["correctAnswer"]] + q["incorrectAnswers"]
+            random.shuffle(all_answers)
+            correct_index = all_answers.index(q["correctAnswer"])
+            
+            filtered.append({
+                "category": q["category"],
+                "question": q["question"]["text"],
+                "answers": all_answers,
+                "correct_index": correct_index
+            })
+            
+            if len(filtered) >= count:
+                break
+        
+        return filtered
+    except Exception as e:
+        print(f"Error fetching questions for category {category_id}: {e}")
+        return []
+
+# Weighted random choice for wheel selection
+def weighted_random_choice(categories: List[str], weights: List[int]) -> int:
+    """
+    Select a random index based on weights.
+    Returns the index of the winning category.
+    """
+    total_weight = sum(weights)
+    rand_value = random.uniform(0, total_weight)
+    
+    cumulative = 0
+    for i, weight in enumerate(weights):
+        cumulative += weight
+        if rand_value <= cumulative:
+            return i
+    
+    return len(weights) - 1  # Fallback to last
 
 # WebSocket helper functions
 async def send_to_tv(message: dict):
@@ -399,6 +487,43 @@ async def player_websocket(websocket: WebSocket):
                         "index": answer_index
                     })
                     
+                elif msg_type == "vote":
+                    # Handle player vote
+                    if game_state.state != STATE_VOTE or player_id is None:
+                        continue
+                    
+                    category_id = message.get("category_id")
+                    valid_ids = [cat['id'] for cat in game_state.vote_categories]
+                    
+                    if category_id not in valid_ids:
+                        continue
+                    
+                    # Remove previous vote if changing
+                    if player_id in game_state.players_who_voted:
+                        old_cat = game_state.players_who_voted[player_id]
+                        game_state.votes[old_cat] = max(1, game_state.votes.get(old_cat, 1) - 2)
+                    
+                    # Add new vote (+2 per vote, base weight is 1)
+                    game_state.votes[category_id] = game_state.votes.get(category_id, 1) + 2
+                    game_state.players_who_voted[player_id] = category_id
+                    
+                    # Broadcast vote update to TV
+                    vote_update = {"type": "vote_update", "votes": game_state.votes}
+                    await send_to_tv(vote_update)
+                    
+                    # Broadcast vote update to all players
+                    for conn in player_connections[:]:
+                        try:
+                            await conn.send_json(vote_update)
+                        except Exception:
+                            pass
+                    
+                    # Send vote confirmation to player
+                    await websocket.send_json({
+                        "type": "vote_received",
+                        "category_id": category_id
+                    })
+                    
             except json.JSONDecodeError:
                 pass
     except WebSocketDisconnect:
@@ -412,6 +537,110 @@ async def player_websocket(websocket: WebSocket):
         if websocket in player_connections:
             player_connections.remove(websocket)
         await broadcast_player_update()
+
+# Voting system functions
+async def start_vote_phase():
+    """
+    Start the voting phase for the current block.
+    - Picks 5 random categories
+    - Sends vote request to all players
+    - Waits 10 seconds for votes
+    - Calculates weighted winner
+    - Starts wheel animation
+    - Fetches questions and starts block
+    """
+    global game_state
+    
+    # Select 5 random categories from the 10 available
+    all_category_ids = list(CATEGORIES.keys())
+    selected_categories = random.sample(all_category_ids, 5)
+    
+    # Create category display objects
+    vote_categories = [
+        {
+            'id': cat_id,
+            'name': CATEGORIES[cat_id]['name'],
+            'color': CATEGORIES[cat_id]['color']
+        }
+        for cat_id in selected_categories
+    ]
+    
+    # Initialize vote counts (each starts at 1)
+    game_state.vote_categories = vote_categories
+    game_state.votes = {cat_id: 1 for cat_id in selected_categories}
+    
+    # Update game state
+    game_state.state = STATE_VOTE
+    game_state.players_who_voted = {}  # Reset votes for this round
+    
+    # Send vote message to TV and players
+    vote_message = {
+        "type": "vote",
+        "categories": vote_categories,
+        "timer": 10,
+        "block": game_state.current_block + 1  # Display 1-indexed block number
+    }
+    await send_to_tv(vote_message)
+    for connection in player_connections[:]:
+        try:
+            await connection.send_json(vote_message)
+        except Exception:
+            pass
+    
+    # Wait 10 seconds for voting
+    await asyncio.sleep(10)
+    
+    # Calculate weighted selection
+    weights = [game_state.votes[cat_id] for cat_id in selected_categories]
+    winner_index = weighted_random_choice(selected_categories, weights)
+    winning_category_id = selected_categories[winner_index]
+    
+    # Send wheel message to TV
+    wheel_message = {
+        "type": "wheel",
+        "categories": vote_categories,
+        "weights": weights,
+        "winner_index": winner_index
+    }
+    await send_to_tv(wheel_message)
+    
+    # Wait for wheel animation (5 seconds)
+    await asyncio.sleep(5)
+    
+    # Fetch questions for winning category
+    difficulty = game_state.difficulty
+    questions_in_block = game_state.blocks[game_state.current_block]
+    game_state.questions = fetch_questions_for_category(
+        winning_category_id, difficulty, questions_in_block
+    )
+    
+    # Check if we have enough questions
+    if len(game_state.questions) < questions_in_block:
+        # Fall back to fetching more questions (any category)
+        game_state.questions = fetch_questions(difficulty)[:questions_in_block]
+    
+    # Update game state
+    game_state.current_question_index = 0
+    game_state.block_question_index = 0
+    game_state.state = STATE_QUESTION
+    
+    # Send block start notification
+    block_start_message = {
+        "type": "block_start",
+        "category": CATEGORIES[winning_category_id]['name'],
+        "block": game_state.current_block + 1,
+        "questions_in_block": questions_in_block
+    }
+    await send_to_tv(block_start_message)
+    for connection in player_connections[:]:
+        try:
+            await connection.send_json(block_start_message)
+        except Exception:
+            pass
+    
+    # Start first question of the block
+    await next_question()
+
 
 # HTTP endpoints
 @app.get("/")
@@ -460,6 +689,18 @@ async def get_qrcode():
     return {"qr_code": qr_base64, "url": join_url}
 
 # Game control endpoints
+@app.post("/api/set_difficulty")
+async def set_difficulty(request: Request):
+    """Set the difficulty for the next game."""
+    global game_state
+    data = await request.json()
+    difficulty = data.get("difficulty")
+    # Validate difficulty
+    if difficulty not in [None, "easy", "medium", "hard"]:
+        raise HTTPException(status_code=400, detail="Invalid difficulty")
+    game_state.difficulty = difficulty
+    return {"status": "ok", "difficulty": difficulty}
+
 @app.post("/api/start")
 async def start_game():
     """Start a new game."""
@@ -471,17 +712,13 @@ async def start_game():
     # Reset game state
     game_state = GameState()
     game_state.players = current_players
-    game_state.questions = fetch_questions()[:NUM_QUESTIONS_PER_GAME]
+    game_state.difficulty = game_state.difficulty  # Restore difficulty
+    game_state.current_block = 0
     
-    if not game_state.questions:
-        raise HTTPException(status_code=500, detail="No questions available")
+    # Start first vote phase
+    asyncio.create_task(start_vote_phase())
     
-    game_state.state = STATE_LOBBY
-    
-    # Broadcast lobby state
-    await broadcast_player_update()
-    
-    return {"status": "started", "questions_count": len(game_state.questions)}
+    return {"status": "started"}
 
 @app.post("/api/next_question")
 async def next_question():
@@ -564,6 +801,7 @@ async def move_to_scoreboard():
     global game_state
     
     game_state.state = STATE_SCOREBOARD
+    game_state.block_question_index += 1
     game_state.current_question_index += 1
     
     await send_scoreboard_to_all()
@@ -571,8 +809,15 @@ async def move_to_scoreboard():
     # Wait 5 seconds then start next question or end game
     await asyncio.sleep(5)
     
-    if game_state.current_question_index >= len(game_state.questions):
-        await end_game()
+    questions_in_block = game_state.blocks[game_state.current_block]
+    if game_state.block_question_index >= questions_in_block:
+        # Block done
+        if game_state.current_block + 1 >= len(game_state.blocks):
+            await end_game()
+        else:
+            game_state.current_block += 1
+            game_state.block_question_index = 0
+            await start_vote_phase()
     else:
         await next_question()
 

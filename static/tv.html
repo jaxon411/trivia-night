@@ -446,6 +446,37 @@
             .scoreboard-row { font-size: 1.5rem; padding: 1rem; }
             .winner-name { font-size: 3rem; }
         }
+
+        /* Difficulty Selector */
+        .difficulty-selector {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .diff-btn {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .diff-btn:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .diff-btn.active {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.3);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -483,6 +514,17 @@
                     <img id="tv-qr-code" style="max-width: 200px; height: auto;" alt="QR Code">
                 </div>
                 <div id="tv-join-url" style="font-family: monospace; font-size: 1.5rem; color: #a0a0b0; margin: 1rem 0;"></div>
+                
+                <div class="difficulty-selector" id="difficulty-selector">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #a0a0b0;">Select Difficulty</h3>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button class="diff-btn active" onclick="setDifficulty(null)" id="diff-mixed">🎲 Mixed</button>
+                        <button class="diff-btn" onclick="setDifficulty('easy')" id="diff-easy">😊 Easy</button>
+                        <button class="diff-btn" onclick="setDifficulty('medium')" id="diff-medium">🤔 Medium</button>
+                        <button class="diff-btn" onclick="setDifficulty('hard')" id="diff-hard">🔥 Hard</button>
+                    </div>
+                </div>
+                
                 <div class="lobby-players" id="lobby-players">
                     <!-- Players will be added here -->
                 </div>
@@ -545,6 +587,25 @@
             </div>
         </div>
 
+        <!-- Vote View -->
+        <div id="view-vote" class="tv-view">
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; max-width:1200px; margin:0 auto; width:100%;">
+                <h1 style="font-size:3.5rem; margin-bottom:0.5rem;">🗳️ Vote for Block <span id="vote-block-num">1</span>!</h1>
+                <div style="font-size:2rem; color:#a0a0b0; margin-bottom:2rem;">Choose the next category</div>
+                <div style="font-size:2.5rem; font-weight:bold; margin-bottom:2rem;" id="vote-timer">10s</div>
+                <div id="vote-categories" style="display:grid; grid-template-columns:repeat(5,1fr); gap:1.5rem; width:100%;"></div>
+            </div>
+        </div>
+
+        <!-- Wheel View -->
+        <div id="view-wheel" class="tv-view">
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <h1 style="font-size:3rem; margin-bottom:2rem;">🎰 Spinning...</h1>
+                <canvas id="wheelCanvas" width="500" height="500"></canvas>
+                <h2 id="wheel-result" style="font-size:3rem; margin-top:2rem; color:#f1c40f;"></h2>
+            </div>
+        </div>
+
         <!-- Final View -->
         <div id="view-final" class="tv-view">
             <div class="final-content">
@@ -574,6 +635,7 @@
         </div>
     </div>
 
+    <script src="/static/js/wheel.js"></script>
     <script src="/static/js/tv.js"></script>
 </body>
 </html>

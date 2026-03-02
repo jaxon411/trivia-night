@@ -29,6 +29,19 @@ function fetchQRCode() {
         .catch(err => console.error('Error fetching QR:', err));
 }
 
+// Difficulty selection
+function setDifficulty(difficulty) {
+    fetch('/api/set_difficulty', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({difficulty: difficulty})
+    });
+    // Update button styles
+    document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+    const id = difficulty ? 'diff-' + difficulty : 'diff-mixed';
+    document.getElementById(id).classList.add('active');
+}
+
 function connectWebSocket() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws/tv`;
@@ -73,6 +86,18 @@ function handleServerMessage(message) {
             break;
         case 'final_results':
             showFinalResults(message.players, message.winner);
+            break;
+        case 'vote':
+            showVoteView(message);
+            break;
+        case 'vote_update':
+            updateVoteDisplay(message.votes);
+            break;
+        case 'wheel':
+            showWheelView(message);
+            break;
+        case 'block_start':
+            // Wheel done, next question will come automatically
             break;
     }
 }
@@ -162,6 +187,10 @@ function resetGame() {
 function showQuestion(question, timer, questionNum, totalQuestions) {
     currentQuestionIndex = questionNum - 1;
     totalQuestions = totalQuestions;
+    
+    // Hide difficulty selector when game starts
+    const diffSelector = document.getElementById('difficulty-selector');
+    if (diffSelector) diffSelector.style.display = 'none';
     
     document.getElementById('view-question').classList.add('active');
     document.getElementById('view-lobby').classList.remove('active');
@@ -352,3 +381,71 @@ window.addEventListener('load', () => {
         })
         .catch(err => console.error('Error fetching status:', err));
 });
+
+// Vote View Functions
+function showVoteView(message) {
+    // Hide all views, show view-vote
+    document.querySelectorAll('.tv-view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-vote').classList.add('active');
+    
+    document.getElementById('vote-block-num').textContent = message.block;
+    document.getElementById('vote-timer').textContent = message.timer + 's';
+    
+    const grid = document.getElementById('vote-categories');
+    grid.innerHTML = '';
+    
+    const icons = {
+        'arts_and_literature': '🎨',
+        'film_and_tv': '🎬',
+        'food_and_drink': '🍽️',
+        'general_knowledge': '💡',
+        'geography': '🌍',
+        'history': '📜',
+        'music': '🎵',
+        'science': '🔬',
+        'society_and_culture': '👥',
+        'sport_and_leisure': '⚽'
+    };
+    
+    message.categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.id = 'tv-vote-' + cat.id;
+        card.style.cssText = 'background:rgba(255,255,255,0.08); border:3px solid ' + cat.color + '; border-radius:16px; padding:2rem; text-align:center; transition:all 0.3s;';
+        card.innerHTML = '<div style="font-size:3rem;margin-bottom:1rem;">' + (icons[cat.id]||'❓') + '</div>'
+            + '<div style="font-size:1.5rem;font-weight:bold;color:' + cat.color + ';margin-bottom:0.5rem;">' + cat.name + '</div>'
+            + '<div class="vote-count" style="font-size:1.8rem;font-weight:bold;">0 votes</div>';
+        grid.appendChild(card);
+    });
+    
+    // Start countdown display
+    let remaining = message.timer;
+    const timerEl = document.getElementById('vote-timer');
+    const voteTimerInterval = setInterval(() => {
+        remaining--;
+        timerEl.textContent = remaining + 's';
+        if (remaining <= 0) clearInterval(voteTimerInterval);
+    }, 1000);
+}
+
+function updateVoteDisplay(votes) {
+    Object.entries(votes).forEach(([catId, count]) => {
+        const card = document.getElementById('tv-vote-' + catId);
+        if (card) {
+            const countEl = card.querySelector('.vote-count');
+            if (countEl) countEl.textContent = (count - 1) + ' votes'; // subtract base weight of 1
+        }
+    });
+}
+
+// Wheel View Functions
+function showWheelView(message) {
+    document.querySelectorAll('.tv-view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-wheel').classList.add('active');
+    document.getElementById('wheel-result').textContent = '';
+    
+    // Use wheel.js
+    const wheel = new SpinWheel('wheelCanvas', message.categories, message.weights);
+    wheel.spin(message.winner_index, 4000).then(() => {
+        document.getElementById('wheel-result').textContent = '🎉 ' + message.categories[message.winner_index].name + '!';
+    });
+}
